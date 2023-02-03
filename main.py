@@ -12,40 +12,56 @@ clean_organisation = []
 [clean_organisation.append(a) for a in all_organisations if a not in clean_organisation]
 
 total_organisations = {"Total Number of organisations": len(clean_organisation)}
-print(total_organisations)
 
-launch_per_organisation = {}
-
+fubar = {}
 for i in all_organisations:
     launches = all_organisations.count(i)
-    launch_per_organisation[i] = launches
+    fubar[i] = launches
 
-print(launch_per_organisation)"""
+launch_per_organisation = {"Organisation": [i for i in clean_organisation], "N° Launches": [i for i in fubar.values()]}
+
+launches_df = pd.DataFrame.from_dict(launch_per_organisation)
+print(launches_df)"""
 
 # --------  Distribution of Rocket_status -------- #
 """rocket_status = df["Rocket_Status"].to_list()
-print(len(rocket_status))
 
 status_count = {}
 for i in rocket_status:
     count = rocket_status.count(i)
     status_count[i] = count
-print(status_count)
-"""
+
+clean = []
+[clean.append(x) for x in rocket_status if x not in clean]
+
+rockets = {"Rocket": [i for i in clean], "N°": [i for i in status_count.values()]}
+
+rocket_status_df = pd.DataFrame.from_dict(rockets)
+print(rocket_status_df)"""
+
+# --------  Outcome of missions -------- #
+"""all_missions = df["Mission_Status"].to_list()
+
+mission_status = {}
+for i in all_missions:
+    count = all_missions.count(i)
+    mission_status[i] = count
+    
+status_df = pd.DataFrame.from_dict(mission_status, orient='index')
+print(status_df)"""
 
 # --------  Reported cost per mission -------- #
 """all_costs = df["Price"].to_list()
-reported = [i for i in all_costs if str(i) != "nan"]
+all_organisations = df["Organisation"].to_list()
 
-all_missions = {"total_missions": len(all_costs), "missions_w_reported_cost": len(reported)}
-print(reported)
-print(all_missions)"""
-
+report = {"Organisation": [i for i in all_organisations], "Cost per mission": [x for x in all_costs]}
+report_df = pd.DataFrame.from_dict(report)
+print(report_df)"""
 
 # --------  N° of launches per country -------- #
 # ("pacific ocean" is international waters. those flights where operated by zenith, the exact launch site was
 # 0°N 154°W, according to wikipedia)
-all_countries = df["Location"].to_list()
+"""all_countries = df["Location"].to_list()
 
 divided = []
 for i in all_countries:
@@ -87,9 +103,9 @@ for i in clean:
     launches = clean.count(i)
     launches_per_country[i] = launches
 
-print(launches_per_country)
-
-# ask pandas to find every success and failure row, and then give you the content of the LOCATION cell of every row.
-# you want: "location": Success, "location": failure, etc.
-# then divide in 2 separate dictionaries: successes per country, failures per country
-
+countries_dict = {"Country of Launch": [i for i in launches_per_country], "N° of Launches": [i for i in
+                                                                                             launches_per_country.
+                                                                                             values()]}
+countries_df = pd.DataFrame.from_dict(countries_dict)
+print(countries_df)
+"""
