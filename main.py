@@ -21,8 +21,8 @@ for i in all_organisations:
 launch_per_organisation = {"Organisation": [i for i in clean_organisation], "N° Launches": [i for i in fubar.values()]}
 
 launches_df = pd.DataFrame.from_dict(launch_per_organisation)
-print(launches_df)"""
-
+print(launches_df)
+"""
 # --------  Distribution of Rocket_status -------- #
 """rocket_status = df["Rocket_Status"].to_list()
 
@@ -51,12 +51,38 @@ status_df = pd.DataFrame.from_dict(mission_status, orient='index')
 print(status_df)"""
 
 # --------  Reported cost per mission -------- #
-"""all_costs = df["Price"].to_list()
-all_organisations = df["Organisation"].to_list()
+report = {"Organisation": [i for i in df["Organisation"].to_list()],
+          "Cost per mission": [str(x) for x in df["Price"].to_list()]}
 
-report = {"Organisation": [i for i in all_organisations], "Cost per mission": [x for x in all_costs]}
+for i in report["Cost per mission"]:
+    if "," in i:
+        x = i.replace(",", "")
+        i = x
+
 report_df = pd.DataFrame.from_dict(report)
-print(report_df)"""
+"""print(report_df["Cost per mission"])
+for i in report_df["Cost per mission"]:
+    if "," in i:
+        x = i.replace(",", "")
+        report_df["Cost per mission"][i] = x
+        print(report_df["Cost per mission"][i])"""
+
+# report_df.loc[report_df["Cost per mission"] == "nan", "Cost per mission"] = 0.0
+
+# print(report_df.to_string())
+
+# report_df["Cost per mission"] = report_df["Cost per mission"].astype(float)
+
+# report_df.loc[report_df["Organisation"] == "SpaceX", "Cost per mission"].sum()
+
+print((report_df["Cost per mission"][1916]))
+print(type(report_df["Cost per mission"][1916]))
+
+# report_df["Cost per mission"] = report_df["Cost per mission"].astype(int)
+
+
+"""result = report_df.loc[report_df['Organisation'] == "NASA", 'Cost per mission'].sum()
+print(result)"""
 
 # --------  N° of launches per country -------- #
 # ("pacific ocean" is international waters. those flights where operated by zenith, the exact launch site was
@@ -109,3 +135,28 @@ countries_dict = {"Country of Launch": [i for i in launches_per_country], "N° o
 countries_df = pd.DataFrame.from_dict(countries_dict)
 print(countries_df)
 """
+# ask pandas to find every success and failure row, and then give you the content of the LOCATION cell of every row.
+# you want: "location": Success, "location": failure, etc.
+# then divide in 2 separate dictionaries: successes per country, failures per country
+
+
+# --------  N° of Failures per country -------- #
+"""rough = {"Organisation": [i for i in df["Organisation"].to_list()],
+         "Mission Status": [x for x in df["Mission_Status"].to_list()]}
+
+rough_df = pd.DataFrame.from_dict(rough)
+
+maybe = rough_df.groupby(rough_df.columns.tolist(), as_index=False).size()
+
+print(maybe.to_string())
+"""
+
+# --------  Investment per Organization -------- #
+"""rough = {"Organisation": [i for i in df["Organisation"].to_list()],
+         "Cost per Mission": [x for x in df["Price"].to_list()]}
+
+rough_df = pd.DataFrame.from_dict(rough)
+
+maybe = rough_df.groupby(rough_df.columns.to_list()).sum()
+
+print(rough_df)"""
