@@ -52,37 +52,21 @@ print(status_df)"""
 
 # --------  Reported cost per mission -------- #
 report = {"Organisation": [i for i in df["Organisation"].to_list()],
-          "Cost per mission": [str(x) for x in df["Price"].to_list()]}
-
-for i in report["Cost per mission"]:
-    if "," in i:
-        x = i.replace(",", "")
-        i = x
+          "Cost per mission": [str(x).replace(",", "") for x in df["Price"].to_list()]}
 
 report_df = pd.DataFrame.from_dict(report)
-"""print(report_df["Cost per mission"])
-for i in report_df["Cost per mission"]:
-    if "," in i:
-        x = i.replace(",", "")
-        report_df["Cost per mission"][i] = x
-        print(report_df["Cost per mission"][i])"""
-
-# report_df.loc[report_df["Cost per mission"] == "nan", "Cost per mission"] = 0.0
+report_df.loc[report_df["Cost per mission"] == "nan", "Cost per mission"] = 0.0
+report_df["Cost per mission"] = report_df["Cost per mission"].astype(float)
 
 # print(report_df.to_string())
 
-# report_df["Cost per mission"] = report_df["Cost per mission"].astype(float)
-
-# report_df.loc[report_df["Organisation"] == "SpaceX", "Cost per mission"].sum()
-
-print((report_df["Cost per mission"][1916]))
-print(type(report_df["Cost per mission"][1916]))
-
-# report_df["Cost per mission"] = report_df["Cost per mission"].astype(int)
-
-
-"""result = report_df.loc[report_df['Organisation'] == "NASA", 'Cost per mission'].sum()
-print(result)"""
+# --------  Total expenses by organisation -------- #
+final = report_df.groupby("Organisation").sum()
+maybe = pd.DataFrame.to_dict(final)
+shit = {"Organisation": [i for i in maybe["Cost per mission"]],
+        "Total investment (mm)": [i for i in maybe["Cost per mission"].values()]}
+d_shit = pd.DataFrame.from_dict(shit)
+print(d_shit)
 
 # --------  N° of launches per country -------- #
 # ("pacific ocean" is international waters. those flights where operated by zenith, the exact launch site was
