@@ -51,22 +51,26 @@ status_df = pd.DataFrame.from_dict(mission_status, orient='index')
 print(status_df)"""
 
 # --------  Reported cost per mission -------- #
-report = {"Organisation": [i for i in df["Organisation"].to_list()],
+"""report = {"Organisation": [i for i in df["Organisation"].to_list()],
           "Cost per mission": [str(x).replace(",", "") for x in df["Price"].to_list()]}
 
 report_df = pd.DataFrame.from_dict(report)
 report_df.loc[report_df["Cost per mission"] == "nan", "Cost per mission"] = 0.0
 report_df["Cost per mission"] = report_df["Cost per mission"].astype(float)
 
-# print(report_df.to_string())
+print(report_df.to_string())"""
 
 # --------  Total expenses by organisation -------- #
-final = report_df.groupby("Organisation").sum()
+"""final = report_df.groupby("Organisation").sum()
+
 maybe = pd.DataFrame.to_dict(final)
+
 shit = {"Organisation": [i for i in maybe["Cost per mission"]],
         "Total investment (mm)": [i for i in maybe["Cost per mission"].values()]}
+        
 d_shit = pd.DataFrame.from_dict(shit)
-print(d_shit)
+
+print(d_shit)"""
 
 # --------  N° of launches per country -------- #
 # ("pacific ocean" is international waters. those flights where operated by zenith, the exact launch site was
@@ -135,12 +139,31 @@ maybe = rough_df.groupby(rough_df.columns.tolist(), as_index=False).size()
 print(maybe.to_string())
 """
 
-# --------  Investment per Organization -------- #
-"""rough = {"Organisation": [i for i in df["Organisation"].to_list()],
-         "Cost per Mission": [x for x in df["Price"].to_list()]}
+# --------  Launches per year -------- #
+all_launches = df["Date"].to_list()
 
-rough_df = pd.DataFrame.from_dict(rough)
+divided = [i.split(",") for i in all_launches]
 
-maybe = rough_df.groupby(rough_df.columns.to_list()).sum()
+for i in divided:
+    fu = i[0].split(" ")
+    bar = i[1].split(" ")
+    i[0] = fu
+    i[1] = bar
+    month = i[0][1]
+    i[0][1] = i[0][2]
+    i[0][2] = month
+    if len(i[1]) == 4:
+        i[1] = i[1][1: -1]
+    else:
+        i[1][0] = i[1][1]
+        i[1][1] = "--:--"
 
-print(rough_df)"""
+clean = []
+[clean.append(i[0] + i[1]) for i in divided]
+
+fubar = pd.DataFrame(clean, columns=["Day", "N°", "Month", "Year", "Hour"])
+
+maybe = fubar.groupby(["Year"]).size().to_frame("Launches").reset_index()
+
+print(fubar.to_string())
+print(maybe)
