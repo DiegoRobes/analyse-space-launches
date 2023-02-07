@@ -165,5 +165,17 @@ fubar = pd.DataFrame(clean, columns=["Day", "N°", "Month", "Year", "Hour"])
 
 maybe = fubar.groupby(["Year"]).size().to_frame("Launches").reset_index()
 
-print(fubar.to_string())
-print(maybe)
+# print(fubar.to_string())
+# print(maybe)
+
+# --------  Launches month-to-month -------- #
+months = fubar.groupby(["Year", "Month"]).aggregate("count").reset_index()
+months.rename(columns={"N°": "N° Launches"}, inplace=True)
+del months["Day"]
+del months["Hour"]
+# print(months.to_string())
+
+# -------- Most popular months to launch -------- #
+popular_months = fubar.groupby(["Month"]).size().to_frame("Launches")\
+    .sort_values(by="Launches", ascending=False).reset_index()
+# print(popular_months.to_string())
